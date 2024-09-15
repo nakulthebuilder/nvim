@@ -8,7 +8,18 @@ return {
     },
 
     config = function()
-        require('telescope').setup({})
+        require('telescope').setup({
+            extensions = {
+                file_browser = {
+                    path = "%:p:h",
+                    display_stat = false,
+                    grouped = true,
+                    hidden = true,
+                    hide_parent_dir = true,
+                    prompt_path = true
+                }
+            }
+        })
 
         local builtin = require('telescope.builtin')
         vim.keymap.set('n', '<leader>pf', builtin.find_files, {})
@@ -51,4 +62,3 @@ return {
             { desc = "Open harpoon window" })
     end
 }
-
