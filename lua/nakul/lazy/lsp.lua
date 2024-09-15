@@ -11,11 +11,13 @@ return {
         "L3MON4D3/LuaSnip",
         "saadparwaiz1/cmp_luasnip",
         "j-hui/fidget.nvim",
+        "onsails/lspkind-nvim",
     },
 
     config = function()
         local cmp = require('cmp')
         local cmp_lsp = require("cmp_nvim_lsp")
+        local lspkind = require("lspkind")
         local capabilities = vim.tbl_deep_extend(
             "force",
             {},
@@ -89,7 +91,14 @@ return {
                 { name = 'luasnip' }, -- For luasnip users.
             }, {
                 { name = 'buffer' },
-            })
+            }),
+            formatting = {
+                format = lspkind.cmp_format({
+                    mode = "symbol_text",
+                    maxwidth = 70,
+                    show_labelDetails = true
+                })
+            }
         })
 
         vim.diagnostic.config({

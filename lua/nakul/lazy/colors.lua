@@ -79,8 +79,16 @@ return {
                     italic = false,
                 },
             })
+        end
+    },
+    {
+        "catppuccin/nvim",
+        name = "catppuccin",
+        lazy = true, -- Ensure this theme loads on start
+        priority = 1000, -- Set high priority to load this theme first
+        config = function()
             -- Apply theme on initialization
-            ColorMyPencils("rose-pine")
+            ColorMyPencils("catppuccin-mocha")
         end
     },
 }
