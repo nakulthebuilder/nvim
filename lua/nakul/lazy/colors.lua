@@ -71,7 +71,7 @@ return {
         "rose-pine/neovim",
         name = "rose-pine",
         lazy = false, -- Ensure this theme loads on start
-        priority = 1000, -- Set high priority to load this theme first
+        priority = 998, -- Set high priority to load this theme first
         config = function()
             require('rose-pine').setup({
                 disable_background = false,
@@ -81,6 +81,7 @@ return {
             })
         end
     },
+
     {
         "catppuccin/nvim",
         name = "catppuccin",
@@ -89,6 +90,39 @@ return {
         config = function()
             -- Apply theme on initialization
             ColorMyPencils("catppuccin-mocha")
+        end
+    },
+
+    {
+        "scottmckendry/cyberdream.nvim",
+        name = "cyberdream",
+        lazy = false, -- Ensure this theme loads on start
+        priority = 999, -- Set high priority to load this theme first
+        config = function()
+            -- Apply theme on initialization
+            -- ColorMyPencils("cyberdream")
+        end
+    },
+
+    {
+        "Mofiqul/dracula.nvim",
+        name = "dracula",
+        lazy = false, -- Ensure this theme loads on start
+        priority = 999, -- Set high priority to load this theme first
+        config = function()
+            -- Apply theme on initialization
+            -- ColorMyPencils("dracula")
+        end
+    },
+
+    {
+        "Mofiqul/vscode.nvim",
+        name = "vscode",
+        lazy = false, -- Ensure this theme loads on start
+        priority = 999, -- Set high priority to load this theme first
+        config = function()
+            -- Apply theme on initialization
+            -- ColorMyPencils("vscode")
         end
     },
 }

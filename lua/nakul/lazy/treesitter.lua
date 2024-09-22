@@ -2,10 +2,10 @@ return {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     dependencies = {
-        {"nvim-treesitter/nvim-treesitter-textobjects"},
+        { "nvim-treesitter/nvim-treesitter-textobjects" },
         {
             "nvim-treesitter/nvim-treesitter-context",
-            opts = {enable = true, mode = "topline", line_numbers = true}
+            opts = { enable = true, mode = "topline", line_numbers = true }
         }
     },
     config = function()
@@ -30,16 +30,16 @@ return {
 
             highlight = {
                 enable = true,
-                additional_vim_regex_highlighting = { "markdown" },
+                additional_vim_regex_highlighting = false,
             },
-            textobjects = {select = {enable = true, lookahead = true}}
+            -- textobjects = { select = { enable = true, lookahead = true } }
         })
 
         local treesitter_parser_config = require("nvim-treesitter.parsers").get_parser_configs()
         treesitter_parser_config.templ = {
             install_info = {
                 url = "https://github.com/vrischmann/tree-sitter-templ.git",
-                files = {"src/parser.c", "src/scanner.c"},
+                files = { "src/parser.c", "src/scanner.c" },
                 branch = "master",
             },
         }
