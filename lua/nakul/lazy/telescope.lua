@@ -36,6 +36,7 @@ return {
             builtin.grep_string({ search = vim.fn.input("Grep > ") })
         end)
         vim.keymap.set('n', '<leader>vh', builtin.help_tags, {})
+        vim.keymap.set('n', '<leader>pg', builtin.live_grep, {})
 
         -- local harpoon = require('harpoon')
         -- harpoon:setup({})
