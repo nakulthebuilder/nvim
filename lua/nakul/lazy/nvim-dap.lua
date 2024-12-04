@@ -1,30 +1,36 @@
 return {
-        "mfussenegger/nvim-dap",
-        config = function()
-            local dap = require("dap")
-            dap.adapters.cppdbg = {
-                id = "cppdbg",
-                type = "executable",
-                command = "/path/to/cpptools/extension/debugAdapters/bin/OpenDebugAD7",  -- Adjust to your debugger path
-            }
-            dap.configurations.c = {
-                {
-                    name = "Launch",
-                    type = "cppdbg",
-                    request = "launch",
-                    program = function()
-                        return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-                    end,
-                    cwd = "${workspaceFolder}",
-                    stopAtEntry = false,
-                    setupCommands = {
-                        {
-                            text = "-enable-pretty-printing",
-                            description = "enable pretty printing",
-                            ignoreFailures = false,
-                        },
+    "mfussenegger/nvim-dap",
+    config = function()
+        local dap = require("dap")
+
+        -- Define cppdbg adapter (VSCode cpptools)
+        dap.adapters.cppdbg = {
+            id = "cppdbg",
+            type = "executable",
+            command = "/home/nakul/.vscode/extensions/ms-vscode.cpptools-1.22.11-linux-x64/debugAdapters/bin/OpenDebugAD7",
+        }
+
+        -- Define configurations for C and C++
+        dap.configurations.c = {
+            {
+                name = "Launch C Program",
+                type = "cppdbg",
+                request = "launch",
+                program = function()
+                    return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+                end,
+                cwd = "${workspaceFolder}",
+                stopAtEntry = false,
+                setupCommands = {
+                    {
+                        text = "-enable-pretty-printing",
+                        description = "Enable pretty printing",
+                        ignoreFailures = false,
                     },
                 },
-            }
-        end,
-    }
+            },
+        }
+        dap.configurations.cpp = dap.configurations.c
+    end,
+}
+
