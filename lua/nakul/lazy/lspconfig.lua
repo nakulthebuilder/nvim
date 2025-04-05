@@ -1,15 +1,59 @@
 return {
-        "neovim/nvim-lspconfig",
-        config = function()
-            local lspconfig = require("lspconfig")
-            lspconfig.clangd.setup({
-                on_attach = function(client, bufnr)
-                    local opts = { noremap = true, silent = true }
-                    -- Keybindings for LSP features
-                    vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-                    vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-                    vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-                end,
-            })
-        end,
-    }
+    "neovim/nvim-lspconfig",
+    dependencies = {
+        "hrsh7th/cmp-nvim-lsp", -- LSP source for nvim-cmp
+    },
+    config = function()
+        local lspconfig = require("lspconfig")
+
+        -- C/C++ setup (existing)
+        lspconfig.clangd.setup({
+            on_attach = function(client, bufnr)
+                local opts = { noremap = true, silent = true }
+                -- Keybindings for LSP features
+                vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+                vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+                vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+                -- Enable format on save for C++ files
+                vim.api.nvim_create_autocmd("BufWritePre", {
+                  pattern = "*.cpp,*.h",
+                  callback = function()
+                      vim.lsp.buf.formatting_sync(nil, 1000)
+                  end,
+                })
+            end,
+        })
+
+        -- Python setup (new)
+        lspconfig.pyright.setup({
+            on_attach = function(client, bufnr)
+                local opts = { noremap = true, silent = true }
+                -- Keybindings for LSP features
+                vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+                vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+                vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+                vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+                vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+                vim.api.nvim_buf_set_keymap(bufnr, "n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+
+                -- Enable format on save for Python files
+                vim.api.nvim_create_autocmd("BufWritePre", {
+                  pattern = "*.py",
+                  callback = function()
+                      vim.lsp.buf.format({ async = false })
+                  end,
+                })
+            end,
+            settings = {
+                python = {
+                    analysis = {
+                        autoSearchPaths = true,
+                        diagnosticMode = "workspace",
+                        useLibraryCodeForTypes = true,
+                        typeCheckingMode = "basic"
+                    }
+                }
+            }
+        })
+    end,
+}
