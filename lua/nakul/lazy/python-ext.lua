@@ -53,7 +53,7 @@ return {
   },
 
   {
-    "jose-elias-alvarez/null-ls.nvim",
+    "nvimtools/none-ls.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       local null_ls = require("null-ls")
@@ -67,8 +67,8 @@ return {
           null_ls.builtins.formatting.isort.with({
             extra_args = {"--profile", "black"}
           }),
-          null_ls.builtins.diagnostics.flake8.with({
-            extra_args = {"--max-line-length", "88", "--extend-ignore", "E203"}
+          null_ls.builtins.diagnostics.ruff.with({
+            extra_args = {"--line-length", "88", "--extend-ignore", "E203"}
           }),
           null_ls.builtins.diagnostics.mypy,
         },
