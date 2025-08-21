@@ -42,13 +42,34 @@ return {
       lsp = {
         format_on_save = true,
         pyright = {
+          on_attach = function(client, bufnr)
+            -- Ensure K mapping for hover
+            vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, desc = "Hover Documentation" })
+          end,
           settings = {
             python = {
               analysis = {
                 autoSearchPaths = true,
-                diagnosticMode = "workspace",
+                diagnosticMode = "openFilesOnly",
                 useLibraryCodeForTypes = true,
-                typeCheckingMode = "basic"
+                typeCheckingMode = "off",
+                -- Disable all diagnostics
+                diagnosticSeverityOverrides = {
+                  reportGeneralTypeIssues = "none",
+                  reportOptionalMemberAccess = "none",
+                  reportOptionalCall = "none",
+                  reportUndefinedVariable = "none",
+                  reportImportCycles = "none",
+                  reportMissingImports = "none",
+                  reportMissingTypeStubs = "none",
+                  reportUnusedImport = "none",
+                  reportUnusedClass = "none",
+                  reportUnusedFunction = "none",
+                  reportUnusedVariable = "none",
+                  reportDuplicateImport = "none",
+                  reportOptionalSubscript = "none",
+                  reportOptionalOperand = "none"
+                }
               }
             }
           }

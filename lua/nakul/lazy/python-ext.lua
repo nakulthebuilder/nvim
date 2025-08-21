@@ -58,7 +58,7 @@ return {
     config = function()
       local null_ls = require("null-ls")
 
-      -- Python formatters and linters
+      -- Python formatters only (diagnostics disabled)
       null_ls.setup({
         sources = {
           null_ls.builtins.formatting.black.with({
@@ -67,10 +67,11 @@ return {
           null_ls.builtins.formatting.isort.with({
             extra_args = {"--profile", "black"}
           }),
-          null_ls.builtins.diagnostics.ruff.with({
-            extra_args = {"--line-length", "88", "--extend-ignore", "E203"}
-          }),
-          null_ls.builtins.diagnostics.mypy,
+          -- Diagnostics disabled to avoid pycodestyle/pyflakes warnings
+          -- null_ls.builtins.diagnostics.ruff.with({
+          --   extra_args = {"--line-length", "88", "--extend-ignore", "E203"}
+          -- }),
+          -- null_ls.builtins.diagnostics.mypy,
         },
       })
     end

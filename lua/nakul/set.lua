@@ -23,5 +23,5 @@ vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 -- vim.opt.updatetime = 50 // NOTE THIS WAS CAUSING BUGGINESS WITH NAVIGATOR
-vim.opt.colorcolumn = "100"
+-- vim.opt.colorcolumn = "100"
 vim.o.guicursor = "n-v-c:block-blinkon100,i:ver25-blinkon100"

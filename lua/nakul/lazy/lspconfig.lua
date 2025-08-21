@@ -34,36 +34,7 @@ return {
             end,
         })
 
-        -- Python setup (new)
-        lspconfig.pyright.setup({
-            on_attach = function(client, bufnr)
-                local opts = { noremap = true, silent = true }
-                -- Keybindings for LSP features
-                vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-                vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-                vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-                vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-                vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-                vim.api.nvim_buf_set_keymap(bufnr, "n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-
-                -- Enable format on save for Python files
-                vim.api.nvim_create_autocmd("BufWritePre", {
-                  pattern = "*.py",
-                  callback = function()
-                      vim.lsp.buf.format({ async = false })
-                  end,
-                })
-            end,
-            settings = {
-                python = {
-                    analysis = {
-                        autoSearchPaths = true,
-                        diagnosticMode = "workspace",
-                        useLibraryCodeForTypes = true,
-                        typeCheckingMode = "basic"
-                    }
-                }
-            }
-        })
+        -- Python setup is handled by Navigator.lua
+        -- Removed duplicate configuration to avoid conflicts
     end,
 }
