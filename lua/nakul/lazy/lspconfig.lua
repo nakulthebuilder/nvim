@@ -5,36 +5,49 @@ return {
     },
     config = function()
         local lspconfig = require("lspconfig")
+        local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-        lspconfig.svelte.setup({
-          on_attach = function(client, bufnr)
-            local opts = { noremap = true, silent = true }
-            vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-            vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-            vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-            vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-          end,
+        -- Python LSP setup (pyright for hover/completion)
+        lspconfig.pyright.setup({
+            capabilities = capabilities,
+            on_attach = function(client, bufnr)
+                -- Disable formatting since conform handles it
+                client.server_capabilities.documentFormattingProvider = false
+                client.server_capabilities.documentRangeFormattingProvider = false
+
+                local opts = { noremap = true, silent = true, buffer = bufnr }
+                vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+                vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+                vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+                vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+                vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+            end,
+            settings = {
+                python = {
+                    analysis = {
+                        autoSearchPaths = true,
+                        diagnosticMode = "openFilesOnly",
+                        useLibraryCodeForTypes = true,
+                        typeCheckingMode = "off",
+                        -- Reduce false positives for syntax errors
+                        reportMissingImports = "none",
+                        reportUndefinedVariable = "none",
+                        reportGeneralTypeIssues = "none",
+                    }
+                }
+            }
         })
 
-        -- C/C++ setup (existing)
-        lspconfig.clangd.setup({
+        -- Ruff for linting (ruff_lsp is deprecated, use ruff instead)
+        lspconfig.ruff.setup({
             on_attach = function(client, bufnr)
-                local opts = { noremap = true, silent = true }
-                -- Keybindings for LSP features
-                vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-                vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-                vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-                -- Enable format on save for C++ files
-                vim.api.nvim_create_autocmd("BufWritePre", {
-                  pattern = "*.cpp,*.h",
-                  callback = function()
-                      vim.lsp.buf.formatting_sync(nil, 1000)
-                  end,
-                })
+                -- Disable hover/completion since pyright handles it
+                client.server_capabilities.hoverProvider = false
+                client.server_capabilities.completionProvider = false
+                -- Disable formatting since conform handles it
+                client.server_capabilities.documentFormattingProvider = false
+                client.server_capabilities.documentRangeFormattingProvider = false
             end,
         })
-
-        -- Python setup is handled by Navigator.lua
-        -- Removed duplicate configuration to avoid conflicts
     end,
 }

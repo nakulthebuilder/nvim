@@ -39,40 +39,75 @@ return {
     require("go").setup()
     require("navigator").setup({
       lsp_signature_help = true, -- enable ray-x/lsp_signature
+      lsp_installer = false, -- Disable automatic LSP installation
       lsp = {
-        format_on_save = true,
-        pyright = {
+        disable_lsp = { "pylsp" }, -- Disable pylsp, we use pyright+ruff instead
+        hint = {
+          enable = false -- Disable all LSP hints
+        },
+        format_on_save = false, -- Disabled, using conform.nvim instead
+        gopls = {
           on_attach = function(client, bufnr)
-            -- Ensure K mapping for hover
-            vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, desc = "Hover Documentation" })
+            -- Disable inlay hints for gopls
+            if client.server_capabilities.inlayHintProvider then
+              vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
+            end
           end,
           settings = {
-            python = {
-              analysis = {
-                autoSearchPaths = true,
-                diagnosticMode = "openFilesOnly",
-                useLibraryCodeForTypes = true,
-                typeCheckingMode = "off",
-                -- Disable all diagnostics
-                diagnosticSeverityOverrides = {
-                  reportGeneralTypeIssues = "none",
-                  reportOptionalMemberAccess = "none",
-                  reportOptionalCall = "none",
-                  reportUndefinedVariable = "none",
-                  reportImportCycles = "none",
-                  reportMissingImports = "none",
-                  reportMissingTypeStubs = "none",
-                  reportUnusedImport = "none",
-                  reportUnusedClass = "none",
-                  reportUnusedFunction = "none",
-                  reportUnusedVariable = "none",
-                  reportDuplicateImport = "none",
-                  reportOptionalSubscript = "none",
-                  reportOptionalOperand = "none"
-                }
-              }
+            gopls = {
+              hints = {
+                assignVariableTypes = false,
+                compositeLiteralFields = false,
+                compositeLiteralTypes = false,
+                constantValues = false,
+                functionTypeParameters = false,
+                parameterNames = false,
+                rangeVariableTypes = false
+              },
+              staticcheck = true,
+              gofumpt = true,
+              semanticTokens = true,
+              analyses = {
+                unusedparams = true,
+                shadow = true
+              },
+              codelenses = {
+                gc_details = false,
+                generate = true,
+                regenerate_cgo = true,
+                run_govulncheck = true,
+                test = true,
+                tidy = true,
+                upgrade_dependency = true,
+                vendor = true
+              },
+              usePlaceholders = false
             }
           }
+        },
+        -- Python LSPs are configured in lspconfig.lua to avoid conflicts
+        svelte = {
+          on_attach = function(client, bufnr)
+            local opts = { noremap = true, silent = true }
+            vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+            vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+            vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+            vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+          end,
+        },
+        clangd = {
+          on_attach = function(client, bufnr)
+            -- Disable inlay hints for clangd
+            if client.server_capabilities.inlayHintProvider then
+              vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
+            end
+
+            local opts = { noremap = true, silent = true }
+            -- Keybindings for LSP features
+            vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+            vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+            vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+          end,
         }
       },
       signature_help_cfg = {
@@ -101,6 +136,9 @@ return {
     vim.api.nvim_create_autocmd("FileType", {
       pattern = {"go"},
       callback = function(ev)
+        -- Disable inlay hints for Go files
+        vim.lsp.inlay_hint.enable(false, { bufnr = ev.buf })
+
         -- CTRL/control keymaps
         vim.api
         .nvim_buf_set_keymap(0, "n", "<C-i>", ":GoImport<CR>", {})

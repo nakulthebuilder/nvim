@@ -53,17 +53,27 @@ return {
   },
 
   {
-    "python-rope/rope", -- Python refactoring library
-    lazy = true,
-    ft = "python"
-  },
-
-  {
-    "mfussenegger/nvim-dap-python", -- Debug adapter for Python
-    dependencies = {"mfussenegger/nvim-dap"},
-    ft = "python",
+    "nvimtools/none-ls.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
-      require('dap-python').setup('~/.virtualenvs/debugpy/bin/python')
+      local null_ls = require("null-ls")
+
+      -- Python formatters only (diagnostics disabled)
+      null_ls.setup({
+        sources = {
+          null_ls.builtins.formatting.black.with({
+            extra_args = {"--line-length", "88"}
+          }),
+          null_ls.builtins.formatting.isort.with({
+            extra_args = {"--profile", "black"}
+          }),
+          -- Diagnostics disabled to avoid pycodestyle/pyflakes warnings
+          -- null_ls.builtins.diagnostics.ruff.with({
+          --   extra_args = {"--line-length", "88", "--extend-ignore", "E203"}
+          -- }),
+          -- null_ls.builtins.diagnostics.mypy,
+        },
+      })
     end
   }
 }
