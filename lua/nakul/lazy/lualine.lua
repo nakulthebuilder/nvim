@@ -9,6 +9,9 @@ return {
                 section_separators = '',
             },
             sections = {
+                lualine_b = {
+                    {'branch', fmt = function(str) return str:sub(1, 20) end}
+                },
                 lualine_c = {
                     {'filename', path = 1},
                 }

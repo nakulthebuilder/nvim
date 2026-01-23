@@ -59,3 +59,11 @@ end)
 vim.keymap.set("n", "<leader>t", ":Neotree toggle<CR>")
 vim.keymap.set("n", "<leader>pp", ":e#<CR>")
 
+-- LSP keybindings with Telescope
+vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<CR>", { desc = "LSP references" })
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "LSP definition" })
+vim.keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", { desc = "LSP implementations" })
+vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "LSP hover" })
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "LSP rename" })
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "LSP code action" })
+
