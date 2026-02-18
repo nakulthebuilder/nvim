@@ -36,7 +36,18 @@ return {
             builtin.grep_string({ search = vim.fn.input("Grep > ") })
         end)
         vim.keymap.set('n', '<leader>vh', builtin.help_tags, {})
-        vim.keymap.set('n', '<leader>pg', builtin.live_grep, {})
+        -- Live grep from git root (or cwd if not in git repo)
+        vim.keymap.set('n', '<leader>pg', function()
+            local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+            if vim.v.shell_error == 0 then
+                builtin.live_grep({ cwd = git_root })
+            else
+                builtin.live_grep()
+            end
+        end, {})
+
+        -- Optional: live grep from current directory only
+        vim.keymap.set('n', '<leader>pc', builtin.live_grep, {})
 
         -- local harpoon = require('harpoon')
         -- harpoon:setup({})
