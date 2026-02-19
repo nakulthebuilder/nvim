@@ -169,42 +169,13 @@ return {
             capabilities = capabilities,
         }
 
-        -- Enable LSPs on appropriate filetypes
-        vim.api.nvim_create_autocmd("FileType", {
-            pattern = "python",
-            callback = function()
-                vim.lsp.enable('pyright')
-                vim.lsp.enable('ruff')
-            end,
-        })
-
-        vim.api.nvim_create_autocmd("FileType", {
-            pattern = { "go", "gomod", "gowork", "gotmpl" },
-            callback = function()
-                vim.lsp.enable('gopls')
-            end,
-        })
-
-        vim.api.nvim_create_autocmd("FileType", {
-            pattern = { "c", "cpp", "objc", "objcpp", "cuda" },
-            callback = function()
-                vim.lsp.enable('clangd')
-            end,
-        })
-
-        vim.api.nvim_create_autocmd("FileType", {
-            pattern = "lua",
-            callback = function()
-                vim.lsp.enable('lua_ls')
-            end,
-        })
-
-        vim.api.nvim_create_autocmd("FileType", {
-            pattern = "jinja",
-            callback = function()
-                vim.lsp.enable('jinja-lsp')
-            end,
-        })
+        -- Enable LSPs (filetypes in each config above handle when to attach)
+        vim.lsp.enable('pyright')
+        vim.lsp.enable('ruff')
+        vim.lsp.enable('gopls')
+        vim.lsp.enable('clangd')
+        vim.lsp.enable('lua_ls')
+        vim.lsp.enable('jinja-lsp')
 
         -- Detect .j2 files as jinja filetype
         vim.filetype.add({
