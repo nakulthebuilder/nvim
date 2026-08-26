@@ -8,7 +8,42 @@ return {
     },
 
     config = function()
+        -- Filename first, parent dir after — works on any telescope version
+        -- (this build has no built-in "filename_first" mode).
+        local function filename_first(_, path)
+            local rel = vim.fn.fnamemodify(path, ":.")   -- relative to cwd
+            local tail = vim.fn.fnamemodify(rel, ":t")
+            local parent = vim.fn.fnamemodify(rel, ":h")
+            if parent == "." or parent == "" then
+                return tail
+            end
+            return string.format("%s  %s", tail, parent)
+        end
+
         require('telescope').setup({
+            defaults = {
+                path_display = filename_first,
+                -- Show the selected entry's full path in the preview border,
+                -- updating live as you move up/down (VSCode-style breadcrumb).
+                dynamic_preview_title = true,
+                layout_strategy = "vertical",
+                layout_config = {
+                    vertical = {
+                        width = 0.9,
+                        height = 0.9,
+                        preview_height = 0.5,
+                        mirror = false,
+                    },
+                },
+            },
+            pickers = {
+                -- For LSP lists, rows show only the filename; the full path
+                -- lives in the breadcrumb (preview title) up top. fname_width
+                -- keeps "name:line:col" from being truncated.
+                lsp_references = { path_display = { "tail" }, fname_width = 60 },
+                lsp_definitions = { path_display = { "tail" }, fname_width = 60 },
+                lsp_implementations = { path_display = { "tail" }, fname_width = 60 },
+            },
             extensions = {
                 file_browser = {
                     path = "%:p:h",
