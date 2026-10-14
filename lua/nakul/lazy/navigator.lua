@@ -44,7 +44,7 @@ return {
     -- Disable navigator's LSP management to avoid conflicts
     -- LSPs are configured in lspconfig.lua instead
     require("navigator").setup({
-      lsp = false,  -- Completely disable navigator's LSP setup
+      lsp = { enable = false, disable_lsp = 'all' },  -- Completely disable navigator's LSP setup
     })
 
     -- Set up TypeScript tools
